@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(npx create-next-app@14:*)",
+      "Bash(node --version:*)",
+      "Bash(npm:*)",
+      "Bash(echo:*)",
+      "Bash(cmd /c \"node --version\")",
+      "Bash(cmd /c node --version)",
+      "Bash(cmd /c \"node --version && npm --version\")",
+      "Bash(cmd /c \"D:\\\\AI Code Projects\\\\250 acts of service\\\\check.bat\")",
+      "Bash(powershell -Command \"node --version; npm --version\")",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"D:\\\\AI Code Projects\\\\250 acts of service\\\\setup.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"D:\\\\AI Code Projects\\\\250 acts of service\\\\install.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+﻿Seed complete!
+Counts: [
+  {
+    "side_of_veil": "other",
+    "count": 325
+  },
+  {
+    "side_of_veil": "this",
+    "count": 175
+  }
+]
+Total records: 500
+
+SEED EXIT CODE: 0

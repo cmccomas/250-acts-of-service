@@ -14,7 +14,11 @@
       "Bash(powershell -Command:*)",
       "Bash(powershell -ExecutionPolicy Bypass -File \"D:\\\\AI Code Projects\\\\250 acts of service\\\\setup.ps1\")",
       "Bash(powershell -ExecutionPolicy Bypass -File \"D:\\\\AI Code Projects\\\\250 acts of service\\\\install.ps1\")",
-      "Bash(powershell -ExecutionPolicy Bypass -File:*)"
+      "Bash(powershell -ExecutionPolicy Bypass -File:*)",
+      "Bash(timeout:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

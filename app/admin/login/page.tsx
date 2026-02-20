@@ -36,11 +36,11 @@ export default function AdminLoginPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-lg border border-stone-200 p-8 w-full max-w-sm">
+      <div className="bg-white rounded shadow-sm border border-charcoal/10 p-8 w-full max-w-sm">
         <div className="text-center mb-6">
           <div className="text-3xl mb-2">🔐</div>
-          <h1 className="text-2xl font-bold text-stone-800">Admin Login</h1>
-          <p className="text-stone-500 text-sm mt-1">
+          <h1 className="font-serif text-2xl font-bold text-charcoal">Admin Login</h1>
+          <p className="text-charcoal/50 text-sm mt-1">
             Enter the admin password to continue.
           </p>
         </div>
@@ -51,13 +51,13 @@ export default function AdminLoginPage() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border border-stone-200 rounded-xl px-4 py-3 text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent"
+            className="w-full border border-charcoal/15 rounded px-4 py-3 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:ring-2 focus:ring-forest-400 focus:border-transparent"
             required
             autoFocus
           />
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            <div className="bg-red-50 border border-red-200 rounded px-4 py-3">
               <p className="text-red-700 text-sm">{error}</p>
             </div>
           )}
@@ -65,7 +65,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-stone-700 hover:bg-stone-800 disabled:bg-stone-300 text-white font-semibold py-3 rounded-xl transition-colors shadow-sm"
+            className="w-full bg-forest-700 hover:bg-forest-800 disabled:bg-charcoal/20 text-white font-semibold py-3 rounded transition-colors shadow-sm"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
@@ -74,7 +74,7 @@ export default function AdminLoginPage() {
         <div className="mt-6 text-center">
           <a
             href="/"
-            className="text-stone-500 hover:text-stone-700 text-sm underline"
+            className="text-charcoal/50 hover:text-charcoal/70 text-sm underline"
           >
             &larr; Back to home
           </a>

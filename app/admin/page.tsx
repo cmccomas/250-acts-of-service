@@ -20,17 +20,17 @@ export default async function AdminPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-stone-800">
+          <h1 className="font-serif text-3xl font-bold text-charcoal">
             Admin Dashboard
           </h1>
-          <p className="text-stone-500 text-sm mt-1">
+          <p className="text-charcoal/50 text-sm mt-1">
             Review and approve acts of service
           </p>
         </div>
         <div className="flex items-center gap-4">
           <a
             href="/"
-            className="text-stone-500 hover:text-stone-700 text-sm underline"
+            className="text-charcoal/50 hover:text-charcoal/70 text-sm underline"
           >
             View site
           </a>
@@ -40,25 +40,25 @@ export default async function AdminPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-xl border border-stone-200 p-4 text-center shadow-sm">
-          <div className="text-2xl font-bold text-stone-800">
+        <div className="bg-white rounded border border-charcoal/10 p-4 text-center shadow-sm">
+          <div className="text-2xl font-bold text-charcoal">
             {counts.total}
           </div>
-          <div className="text-xs text-stone-500 font-medium">Total Acts</div>
+          <div className="text-xs text-charcoal/50 font-medium">Total Acts</div>
         </div>
-        <div className="bg-green-50 rounded-xl border border-green-200 p-4 text-center shadow-sm">
-          <div className="text-2xl font-bold text-green-700">
+        <div className="bg-forest-50 rounded border border-forest-200 p-4 text-center shadow-sm">
+          <div className="text-2xl font-bold text-forest-700">
             {counts.this_side}
           </div>
-          <div className="text-xs text-green-600 font-medium">
+          <div className="text-xs text-forest-600 font-medium">
             👤 This Side
           </div>
         </div>
-        <div className="bg-yellow-50 rounded-xl border border-yellow-200 p-4 text-center shadow-sm">
-          <div className="text-2xl font-bold text-yellow-700">
+        <div className="bg-gold-50 rounded border border-gold-200 p-4 text-center shadow-sm">
+          <div className="text-2xl font-bold text-gold-700">
             {counts.other_side}
           </div>
-          <div className="text-xs text-yellow-600 font-medium">
+          <div className="text-xs text-gold-600 font-medium">
             ✨ Other Side
           </div>
         </div>
@@ -66,10 +66,10 @@ export default async function AdminPage() {
 
       {/* Pending acts */}
       <div className="mb-4">
-        <h2 className="text-xl font-bold text-stone-800">
+        <h2 className="font-serif text-xl font-bold text-charcoal">
           Pending Review
           {pendingActs.length > 0 && (
-            <span className="ml-2 inline-flex items-center justify-center bg-stone-600 text-white text-xs font-bold w-6 h-6 rounded-full">
+            <span className="ml-2 inline-flex items-center justify-center bg-charcoal text-white text-xs font-bold w-6 h-6 rounded">
               {pendingActs.length}
             </span>
           )}
@@ -77,10 +77,10 @@ export default async function AdminPage() {
       </div>
 
       {pendingActs.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-stone-200 shadow-sm">
+        <div className="text-center py-16 bg-white rounded border border-charcoal/10 shadow-sm">
           <div className="text-4xl mb-3">✅</div>
-          <p className="text-stone-700 text-lg font-medium">All caught up!</p>
-          <p className="text-stone-500 text-sm mt-1">
+          <p className="text-charcoal/70 text-lg font-medium">All caught up!</p>
+          <p className="text-charcoal/50 text-sm mt-1">
             No pending acts to review. Check back later.
           </p>
         </div>

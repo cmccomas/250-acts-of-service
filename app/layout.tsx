@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,10 +7,16 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  weight: ["400", "600", "700", "800"],
+});
+
 export const metadata: Metadata = {
-  title: "250 Acts of Service",
+  title: "250 Acts of Service — Mt. Spokane Stake",
   description:
-    "Track and celebrate acts of service on both sides of the veil. Together we can reach 250!",
+    "The Mount Spokane Stake celebrates America 250 with 250 acts of service on each side of the veil.",
 };
 
 export default function RootLayout({
@@ -21,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} font-sans bg-gradient-to-b from-stone-50 via-slate-50 to-stone-100 min-h-screen antialiased`}
+        className={`${inter.variable} ${playfair.variable} font-sans bg-ivory min-h-screen antialiased text-charcoal`}
       >
         {children}
       </body>

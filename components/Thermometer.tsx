@@ -57,13 +57,13 @@ function SingleThermometer({
     <div className="flex flex-col items-center gap-2">
       {/* Label */}
       <div className="text-center">
-        <div className="text-lg font-bold" style={{ color: textColor }}>
+        <div className="font-serif text-lg font-bold" style={{ color: textColor }}>
           {icon} {label}
         </div>
       </div>
 
       {/* Count */}
-      <div className="text-center">
+      <div className="text-center relative">
         <div
           className="text-4xl font-extrabold tabular-nums"
           style={{ color: textColor }}
@@ -74,7 +74,7 @@ function SingleThermometer({
           of {goal} &middot; {percentage}%
         </div>
         {count >= goal && (
-          <div className="mt-1 inline-block bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+          <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 whitespace-nowrap bg-forest-100 text-forest-700 text-[10px] font-bold px-2 py-0.5 rounded">
             🎉 +{count - goal} beyond!
           </div>
         )}
@@ -85,7 +85,7 @@ function SingleThermometer({
         width={svgW * 1.6}
         height={svgH}
         viewBox={`0 0 ${svgW} ${svgH}`}
-        className="drop-shadow-md"
+        className="drop-shadow-sm"
         role="img"
         aria-label={`${label} thermometer: ${count} of ${goal} acts`}
       >
@@ -96,9 +96,9 @@ function SingleThermometer({
           width={tubeW}
           height={tubeH}
           rx={tubeR}
-          fill="#f5f5f4"
-          stroke="#78716c"
-          strokeWidth="2"
+          fill="#f5f5f0"
+          stroke="#a3a397"
+          strokeWidth="1.5"
         />
 
         {/* Clip path */}
@@ -131,14 +131,14 @@ function SingleThermometer({
           y1={goalLineY}
           x2={tubeX + tubeW + 5}
           y2={goalLineY}
-          stroke="#78716c"
+          stroke="#a3a397"
           strokeWidth="1.5"
           strokeDasharray="4 3"
         />
         <text
           x={tubeX + tubeW + 8}
           y={goalLineY + 3.5}
-          fill="#78716c"
+          fill="#a3a397"
           fontSize="9"
           fontWeight="bold"
         >
@@ -153,8 +153,8 @@ function SingleThermometer({
           height={tubeH}
           rx={tubeR}
           fill="none"
-          stroke="#78716c"
-          strokeWidth="2"
+          stroke="#a3a397"
+          strokeWidth="1.5"
         />
 
         {/* Connection to bulb */}
@@ -163,7 +163,7 @@ function SingleThermometer({
           y={tubeTop + tubeH - 2}
           width={tubeW - 10}
           height={24}
-          fill={count > 0 ? fillColor : "#fef3c7"}
+          fill={count > 0 ? fillColor : "#e8e8e0"}
           className="transition-all duration-700"
         />
 
@@ -172,15 +172,15 @@ function SingleThermometer({
           cx={bulbCx}
           cy={bulbCy}
           r={bulbR}
-          fill="#f5f5f4"
-          stroke="#78716c"
-          strokeWidth="2"
+          fill="#f5f5f0"
+          stroke="#a3a397"
+          strokeWidth="1.5"
         />
         <circle
           cx={bulbCx}
           cy={bulbCy}
           r={bulbR - 2.5}
-          fill={count > 0 ? bulbColor : "#e7e5e4"}
+          fill={count > 0 ? bulbColor : "#e8e8e0"}
           className="transition-all duration-700"
         />
         <circle
@@ -230,11 +230,11 @@ export function ThermometerPair({
     <div className="flex flex-col items-center gap-4">
       {/* Headline — emphasis on 250 per side */}
       <div className="text-center">
-        <div className="text-stone-700 text-sm font-bold uppercase tracking-wider">
+        <div className="font-serif text-charcoal/70 text-sm font-bold uppercase tracking-wider">
           250 on each side
         </div>
         {bothReached && (
-          <div className="mt-1 inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">
+          <div className="mt-1 inline-block bg-forest-100 text-forest-700 text-xs font-bold px-3 py-1 rounded">
             🎉 Both goals reached!
           </div>
         )}
@@ -247,10 +247,10 @@ export function ThermometerPair({
           goal={goal}
           label="This Side"
           icon="👤"
-          fillColor="#16a34a"
-          bulbColor="#16a34a"
-          textColor="#15803d"
-          accentColor="#4ade80"
+          fillColor="#1a6b38"
+          bulbColor="#1a6b38"
+          textColor="#1a4d2e"
+          accentColor="#4da76b"
           clipId="tubeClipThis"
           animated={animated}
         />
@@ -259,17 +259,17 @@ export function ThermometerPair({
           goal={goal}
           label="Other Side"
           icon="✨"
-          fillColor="#eab308"
-          bulbColor="#ca8a04"
-          textColor="#a16207"
-          accentColor="#facc15"
+          fillColor="#d4a017"
+          bulbColor="#b8860b"
+          textColor="#7a5213"
+          accentColor="#e6b33e"
           clipId="tubeClipOther"
           animated={animated}
         />
       </div>
 
       {/* Combined total — secondary emphasis */}
-      <div className="text-center text-stone-400 text-xs mt-1">
+      <div className="text-center text-charcoal/40 text-xs mt-1">
         {total} total acts of service across both sides
       </div>
     </div>

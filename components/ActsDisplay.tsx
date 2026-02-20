@@ -28,10 +28,10 @@ export function ActsDisplay({ initialActs }: ActsDisplayProps) {
     return (
       <div className="text-center py-12">
         <div className="text-5xl mb-4">🌱</div>
-        <p className="text-stone-600 text-lg font-medium mb-2">
+        <p className="text-charcoal/70 text-lg font-medium mb-2">
           No approved acts yet.
         </p>
-        <p className="text-stone-500 text-sm">
+        <p className="text-charcoal/50 text-sm">
           Be the first to submit an act of service and inspire others!
         </p>
       </div>
@@ -49,7 +49,7 @@ export function ActsDisplay({ initialActs }: ActsDisplayProps) {
         <button
           onClick={refresh}
           disabled={loading}
-          className="bg-stone-100 hover:bg-stone-200 disabled:bg-stone-50 text-stone-700 font-semibold px-8 py-2.5 rounded-full transition-all shadow-sm hover:shadow disabled:text-stone-400"
+          className="bg-charcoal/5 hover:bg-charcoal/10 disabled:bg-charcoal/3 text-charcoal/70 font-semibold px-8 py-2.5 rounded transition-all shadow-sm hover:shadow disabled:text-charcoal/30"
         >
           {loading ? (
             <span className="flex items-center gap-2">

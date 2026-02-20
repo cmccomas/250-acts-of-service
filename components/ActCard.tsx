@@ -9,10 +9,10 @@ export function ActCard({ act }: ActCardProps) {
 
   return (
     <div
-      className={`rounded-2xl p-5 border-2 transition-shadow hover:shadow-md ${
+      className={`rounded p-5 border transition-shadow hover:shadow-md ${
         isThisSide
-          ? "bg-gradient-to-br from-green-50 to-emerald-50 border-green-200"
-          : "bg-gradient-to-br from-yellow-50 to-amber-50 border-yellow-300"
+          ? "bg-forest-50 border-forest-200"
+          : "bg-gold-50 border-gold-200"
       }`}
     >
       <div className="flex items-center gap-2 mb-3">
@@ -21,13 +21,13 @@ export function ActCard({ act }: ActCardProps) {
         </span>
         <span
           className={`text-xs font-bold uppercase tracking-wider ${
-            isThisSide ? "text-green-700" : "text-yellow-700"
+            isThisSide ? "text-forest-700" : "text-gold-700"
           }`}
         >
           {isThisSide ? "This Side" : "Other Side"}
         </span>
       </div>
-      <p className="text-gray-700 text-sm leading-relaxed">
+      <p className="text-charcoal/80 text-sm leading-relaxed">
         {act.act_description}
       </p>
     </div>

@@ -45,8 +45,8 @@ export async function insertAct(payload: SubmissionPayload): Promise<void> {
   const db = await getReadyDb();
   await db.execute({
     sql: `INSERT INTO acts_of_service (name, email, ward_name, side_of_veil, act_description)
-          VALUES (:name, :email, :ward_name, :side_of_veil, :act_description)`,
-    args: payload,
+          VALUES (?, ?, ?, ?, ?)`,
+    args: [payload.name, payload.email, payload.ward_name, payload.side_of_veil, payload.act_description],
   });
 }
 

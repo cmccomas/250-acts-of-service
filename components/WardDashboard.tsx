@@ -14,7 +14,10 @@ export function WardDashboard({ initialStats }: WardDashboardProps) {
     const interval = setInterval(async () => {
       try {
         const res = await fetch("/api/ward-stats");
-        if (res.ok) setStats(await res.json());
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) setStats(data);
+        }
       } catch {
         // Silently ignore
       }

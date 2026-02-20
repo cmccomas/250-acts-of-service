@@ -217,7 +217,7 @@ export function ThermometerPair({
         const res = await fetch("/api/progress");
         if (res.ok) {
           const data = await res.json();
-          setCounts(data);
+          if (data && typeof data.this_side === "number") setCounts(data);
         }
       } catch {
         // Silently ignore polling errors

@@ -17,7 +17,7 @@ export function ActsDisplay({ initialActs }: ActsDisplayProps) {
     try {
       const res = await fetch("/api/acts", { cache: "no-store" });
       const data = await res.json();
-      setActs(data.acts ?? []);
+      if (Array.isArray(data.acts)) setActs(data.acts);
     } catch {
       // Silently ignore refresh errors
     }

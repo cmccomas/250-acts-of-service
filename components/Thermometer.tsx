@@ -73,11 +73,14 @@ function SingleThermometer({
         <div className="text-xs font-medium" style={{ color: accentColor }}>
           of {goal} &middot; {percentage}%
         </div>
-        {count >= goal && (
-          <div className="absolute left-1/2 -translate-x-1/2 top-full mt-1 whitespace-nowrap bg-forest-100 text-forest-700 text-[10px] font-bold px-2 py-0.5 rounded">
-            🎉 +{count - goal} beyond!
-          </div>
-        )}
+        {/* Always reserve badge space so both thermometers stay vertically aligned */}
+        <div className="h-6 flex items-center justify-center mt-1">
+          {count >= goal && (
+            <span className="whitespace-nowrap bg-forest-100 text-forest-700 text-[10px] font-bold px-2 py-0.5 rounded">
+              🎉 +{count - goal} beyond!
+            </span>
+          )}
+        </div>
       </div>
 
       {/* SVG */}

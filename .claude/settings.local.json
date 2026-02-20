@@ -18,7 +18,14 @@
       "Bash(timeout:*)",
       "Bash(ls:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(node -e:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(turso:*)",
+      "Bash(curl:*)",
+      "Bash(Test-Path \"D:/AI Code Projects/250 acts of service/.env.local\")"
     ]
   }
 }

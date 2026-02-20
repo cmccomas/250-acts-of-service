@@ -14,7 +14,7 @@ export async function GET() {
       );
     }
 
-    const acts = getAllPendingActs();
+    const acts = await getAllPendingActs();
     return NextResponse.json({ acts });
   } catch (err) {
     console.error("Admin acts fetch error:", err);

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.0",
     "better-sqlite3": "^12.6.2",
     "iron-session": "^8.0.4",
     "next": "14.2.35",

@@ -1,13 +1,15 @@
-import { getProgressCounts, getRandomApprovedActs } from "@/lib/db";
+import { getProgressCounts, getRandomApprovedActs, getWardStats } from "@/lib/db";
 import { SubmissionForm } from "@/components/SubmissionForm";
 import { ThermometerPair } from "@/components/Thermometer";
 import { ActsDisplay } from "@/components/ActsDisplay";
+import { WardDashboard } from "@/components/WardDashboard";
 
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
-  const counts = getProgressCounts();
-  const initialActs = getRandomApprovedActs(6);
+export default async function HomePage() {
+  const counts = await getProgressCounts();
+  const initialActs = await getRandomApprovedActs(6);
+  const wardStats = await getWardStats();
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-6 sm:py-10">
@@ -55,6 +57,13 @@ export default function HomePage() {
         </p>
         <ActsDisplay initialActs={initialActs} />
       </section>
+
+      {/* Ward Dashboard */}
+      {wardStats.length > 0 && (
+        <section className="mb-8 max-w-sm">
+          <WardDashboard initialStats={wardStats} />
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="text-center text-charcoal/40 text-xs py-6 border-t border-charcoal/10">

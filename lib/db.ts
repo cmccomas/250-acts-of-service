@@ -1,37 +1,23 @@
-import Database from "better-sqlite3";
-import path from "path";
-import fs from "fs";
+import { createClient } from "@libsql/client";
 import type {
   Act,
   AdminAct,
   ProgressCounts,
   SubmissionPayload,
+  WardStat,
 } from "./types";
 
-const DB_PATH = process.env.DATABASE_PATH ?? "./data/acts.db";
-
-// Singleton pattern — prevents multiple DB instances during Next.js hot reload
-declare global {
-  // eslint-disable-next-line no-var
-  var __db: Database.Database | undefined;
+function getDb() {
+  return createClient({
+    url: process.env.TURSO_DB_URL!,
+    authToken: process.env.TURSO_DB_TOKEN,
+  });
 }
 
-function getDb(): Database.Database {
-  if (global.__db) return global.__db;
-
-  // Ensure data directory exists
-  const resolvedPath = path.resolve(DB_PATH);
-  const dir = path.dirname(resolvedPath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-
-  const db = new Database(resolvedPath);
-  db.pragma("journal_mode = WAL");
-  db.pragma("foreign_keys = ON");
-
-  // Initialize schema
-  db.exec(`
+// Run once on cold start to ensure schema exists
+async function ensureSchema() {
+  const db = getDb();
+  await db.executeMultiple(`
     CREATE TABLE IF NOT EXISTS acts_of_service (
       id              INTEGER PRIMARY KEY AUTOINCREMENT,
       name            TEXT    NOT NULL,
@@ -45,107 +31,116 @@ function getDb(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_status ON acts_of_service(status);
     CREATE INDEX IF NOT EXISTS idx_created_at ON acts_of_service(created_at);
   `);
-
-  global.__db = db;
-  return db;
 }
 
-// ─── Query functions ───────────────────────────────────────────────────────────
-
-export function insertAct(payload: SubmissionPayload): void {
-  const db = getDb();
-  db.prepare(
-    `INSERT INTO acts_of_service (name, email, ward_name, side_of_veil, act_description)
-     VALUES (@name, @email, @ward_name, @side_of_veil, @act_description)`
-  ).run(payload);
+let schemaReady: Promise<void> | null = null;
+function getReadyDb() {
+  if (!schemaReady) schemaReady = ensureSchema();
+  return schemaReady.then(() => getDb());
 }
 
-export function getRandomApprovedActs(
+// ─── Query functions ────────────────────────────────────────────────────────
+
+export async function insertAct(payload: SubmissionPayload): Promise<void> {
+  const db = await getReadyDb();
+  await db.execute({
+    sql: `INSERT INTO acts_of_service (name, email, ward_name, side_of_veil, act_description)
+          VALUES (:name, :email, :ward_name, :side_of_veil, :act_description)`,
+    args: payload,
+  });
+}
+
+export async function getRandomApprovedActs(
   count = 6,
   side?: "this" | "other"
-): Act[] {
-  const db = getDb();
-  if (side) {
-    return db
-      .prepare(
-        `SELECT id, side_of_veil, act_description
-         FROM acts_of_service
-         WHERE status = 'approved' AND side_of_veil = ?
-         ORDER BY RANDOM()
-         LIMIT ?`
-      )
-      .all(side, count) as Act[];
-  }
-  return db
-    .prepare(
-      `SELECT id, side_of_veil, act_description
-       FROM acts_of_service
-       WHERE status = 'approved'
-       ORDER BY RANDOM()
-       LIMIT ?`
-    )
-    .all(count) as Act[];
+): Promise<Act[]> {
+  const db = await getReadyDb();
+  const result = side
+    ? await db.execute({
+        sql: `SELECT id, side_of_veil, act_description, ward_name
+              FROM acts_of_service
+              WHERE status = 'approved' AND side_of_veil = ?
+              ORDER BY RANDOM() LIMIT ?`,
+        args: [side, count],
+      })
+    : await db.execute({
+        sql: `SELECT id, side_of_veil, act_description, ward_name
+              FROM acts_of_service
+              WHERE status = 'approved'
+              ORDER BY RANDOM() LIMIT ?`,
+        args: [count],
+      });
+  return result.rows as unknown as Act[];
 }
 
-export function getProgressCounts(): ProgressCounts {
-  const db = getDb();
-  const rows = db
-    .prepare(
-      `SELECT side_of_veil, COUNT(*) as count
-       FROM acts_of_service
-       WHERE status IN ('pending', 'approved')
-       GROUP BY side_of_veil`
-    )
-    .all() as { side_of_veil: string; count: number }[];
-
+export async function getProgressCounts(): Promise<ProgressCounts> {
+  const db = await getReadyDb();
+  const result = await db.execute(
+    `SELECT side_of_veil, COUNT(*) as count
+     FROM acts_of_service
+     WHERE status IN ('pending', 'approved')
+     GROUP BY side_of_veil`
+  );
   const counts: ProgressCounts = { this_side: 0, other_side: 0, total: 0 };
-  for (const row of rows) {
-    if (row.side_of_veil === "this") counts.this_side = row.count;
-    if (row.side_of_veil === "other") counts.other_side = row.count;
+  for (const row of result.rows) {
+    if (row.side_of_veil === "this") counts.this_side = Number(row.count);
+    if (row.side_of_veil === "other") counts.other_side = Number(row.count);
   }
   counts.total = counts.this_side + counts.other_side;
   return counts;
 }
 
-export function getAllPendingActs(): AdminAct[] {
-  const db = getDb();
-  return db
-    .prepare(
-      `SELECT id, name, email, ward_name, side_of_veil, act_description, status, created_at
-       FROM acts_of_service
-       WHERE status = 'pending'
-       ORDER BY created_at ASC`
-    )
-    .all() as AdminAct[];
+export async function getAllPendingActs(): Promise<AdminAct[]> {
+  const db = await getReadyDb();
+  const result = await db.execute(
+    `SELECT id, name, email, ward_name, side_of_veil, act_description, status, created_at
+     FROM acts_of_service
+     WHERE status = 'pending'
+     ORDER BY created_at ASC`
+  );
+  return result.rows as unknown as AdminAct[];
 }
 
-export function getAllApprovedActs(): AdminAct[] {
-  const db = getDb();
-  return db
-    .prepare(
-      `SELECT id, name, email, ward_name, side_of_veil, act_description, status, created_at
-       FROM acts_of_service
-       WHERE status = 'approved'
-       ORDER BY created_at DESC`
-    )
-    .all() as AdminAct[];
+export async function getAllApprovedActs(): Promise<AdminAct[]> {
+  const db = await getReadyDb();
+  const result = await db.execute(
+    `SELECT id, name, email, ward_name, side_of_veil, act_description, status, created_at
+     FROM acts_of_service
+     WHERE status = 'approved'
+     ORDER BY created_at DESC`
+  );
+  return result.rows as unknown as AdminAct[];
 }
 
-export function approveAct(id: number): boolean {
-  const db = getDb();
-  const result = db
-    .prepare(
-      `UPDATE acts_of_service SET status = 'approved' WHERE id = ? AND status = 'pending'`
-    )
-    .run(id);
-  return result.changes > 0;
+export async function approveAct(id: number): Promise<boolean> {
+  const db = await getReadyDb();
+  const result = await db.execute({
+    sql: `UPDATE acts_of_service SET status = 'approved' WHERE id = ? AND status = 'pending'`,
+    args: [id],
+  });
+  return (result.rowsAffected ?? 0) > 0;
 }
 
-export function deleteAct(id: number): boolean {
-  // Hard delete — row is permanently removed, never counted
-  const db = getDb();
-  const result = db
-    .prepare(`DELETE FROM acts_of_service WHERE id = ?`)
-    .run(id);
-  return result.changes > 0;
+export async function deleteAct(id: number): Promise<boolean> {
+  const db = await getReadyDb();
+  const result = await db.execute({
+    sql: `DELETE FROM acts_of_service WHERE id = ?`,
+    args: [id],
+  });
+  return (result.rowsAffected ?? 0) > 0;
+}
+
+export async function getWardStats(): Promise<WardStat[]> {
+  const db = await getReadyDb();
+  const result = await db.execute(
+    `SELECT ward_name, COUNT(*) as count
+     FROM acts_of_service
+     WHERE status IN ('pending', 'approved')
+     GROUP BY ward_name
+     ORDER BY count DESC`
+  );
+  return result.rows.map((r) => ({
+    ward_name: String(r.ward_name),
+    count: Number(r.count),
+  }));
 }

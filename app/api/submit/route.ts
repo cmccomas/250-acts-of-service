@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    insertAct({
+    await insertAct({
       name: body.name.trim(),
       email: body.email.trim(),
       ward_name: body.ward_name.trim(),

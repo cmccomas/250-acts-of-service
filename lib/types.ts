@@ -2,6 +2,12 @@ export interface Act {
   id: number;
   side_of_veil: "this" | "other";
   act_description: string;
+  ward_name: string;
+}
+
+export interface WardStat {
+  ward_name: string;
+  count: number;
 }
 
 export interface AdminAct {

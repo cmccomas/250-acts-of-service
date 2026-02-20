@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const counts = getProgressCounts();
+    const counts = await getProgressCounts();
     return NextResponse.json(counts);
   } catch (err) {
     console.error("Progress fetch error:", err);

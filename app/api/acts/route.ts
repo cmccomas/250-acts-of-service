@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const acts = getRandomApprovedActs(6);
+    const acts = await getRandomApprovedActs(6);
     return NextResponse.json({ acts });
   } catch (err) {
     console.error("Acts fetch error:", err);

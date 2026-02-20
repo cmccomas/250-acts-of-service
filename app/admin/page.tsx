@@ -12,8 +12,8 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  const pendingActs = getAllPendingActs();
-  const counts = getProgressCounts();
+  const pendingActs = await getAllPendingActs();
+  const counts = await getProgressCounts();
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">

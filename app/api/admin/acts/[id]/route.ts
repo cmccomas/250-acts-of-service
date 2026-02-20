@@ -26,7 +26,7 @@ export async function POST(
     const { action } = (await req.json()) as { action: string };
 
     if (action === "approve") {
-      const updated = approveAct(id);
+      const updated = await approveAct(id);
       if (!updated) {
         return NextResponse.json(
           { error: "Act not found or already approved." },
@@ -34,7 +34,7 @@ export async function POST(
         );
       }
     } else if (action === "delete") {
-      const deleted = deleteAct(id);
+      const deleted = await deleteAct(id);
       if (!deleted) {
         return NextResponse.json(
           { error: "Act not found." },

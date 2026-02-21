@@ -281,7 +281,11 @@ export function SubmissionForm() {
         <button
           type="submit"
           disabled={state === "submitting"}
-          className="w-full bg-forest-700 hover:bg-forest-800 disabled:bg-charcoal/20 text-white font-bold py-3.5 rounded transition-all shadow-sm hover:shadow disabled:shadow-none text-lg"
+          className={`w-full text-white font-bold py-3.5 rounded transition-all shadow-sm hover:shadow disabled:shadow-none text-lg disabled:bg-charcoal/20 ${
+            form.side_of_veil === "other"
+              ? "bg-gold-600 hover:bg-gold-700"
+              : "bg-forest-700 hover:bg-forest-800"
+          }`}
         >
           {state === "submitting" ? (
             <span className="flex items-center justify-center gap-2">

@@ -14,10 +14,11 @@ interface SingleThermometerProps {
   label: string;
   icon: string;
   fillColor: string;
+  fillColorLight: string;
   bulbColor: string;
   textColor: string;
   accentColor: string;
-  clipId: string;
+  uid: string;
   animated: boolean;
 }
 
@@ -27,10 +28,11 @@ function SingleThermometer({
   label,
   icon,
   fillColor,
+  fillColorLight,
   bulbColor,
   textColor,
   accentColor,
-  clipId,
+  uid,
   animated,
 }: SingleThermometerProps) {
   const maxDisplay = Math.max(goal, count);
@@ -39,19 +41,28 @@ function SingleThermometer({
   const percentage = goal > 0 ? Math.round((count / goal) * 100) : 0;
 
   // SVG dimensions
-  const svgW = 70;
-  const svgH = 310;
-  const tubeX = 17;
-  const tubeW = 36;
-  const tubeTop = 15;
+  const svgW = 80;
+  const svgH = 320;
+  const tubeX = 22;
+  const tubeW = 30;
+  const tubeTop = 12;
   const tubeH = 220;
   const tubeR = tubeW / 2;
-  const bulbCx = tubeX + tubeW / 2;
-  const bulbCy = tubeTop + tubeH + 22;
-  const bulbR = 26;
+  const tubeCx = tubeX + tubeW / 2;
+
+  // Bulb
+  const bulbCy = tubeTop + tubeH + 30;
+  const bulbR = 24;
+
+  // Neck connecting tube to bulb
+  const neckTop = tubeTop + tubeH - tubeR;
+  const neckH = bulbCy - bulbR - neckTop + 8;
 
   const fillH = fillPct * tubeH;
   const goalLineY = tubeTop + tubeH - goalPct * tubeH;
+
+  // Tick marks
+  const ticks = [0.25, 0.5, 0.75, 1.0];
 
   return (
     <div className="flex flex-col items-center gap-2">
@@ -83,72 +94,199 @@ function SingleThermometer({
         </div>
       </div>
 
-      {/* SVG */}
+      {/* SVG Thermometer */}
       <svg
-        width={svgW * 1.6}
+        width={svgW * 1.4}
         height={svgH}
         viewBox={`0 0 ${svgW} ${svgH}`}
-        className="drop-shadow-sm"
+        className="drop-shadow-md"
         role="img"
         aria-label={`${label} thermometer: ${count} of ${goal} acts`}
       >
-        {/* Tube background */}
+        <defs>
+          {/* Gradient for the glass tube background */}
+          <linearGradient id={`${uid}-glass`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#e8e8e2" />
+            <stop offset="30%" stopColor="#f8f8f4" />
+            <stop offset="70%" stopColor="#f8f8f4" />
+            <stop offset="100%" stopColor="#e0e0da" />
+          </linearGradient>
+
+          {/* Gradient for the fill liquid */}
+          <linearGradient id={`${uid}-fill`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor={fillColor} />
+            <stop offset="40%" stopColor={fillColorLight} />
+            <stop offset="100%" stopColor={fillColor} />
+          </linearGradient>
+
+          {/* Clip for tube fill */}
+          <clipPath id={`${uid}-tubeClip`}>
+            <rect
+              x={tubeX + 1.5}
+              y={tubeTop + 1.5}
+              width={tubeW - 3}
+              height={tubeH - 3}
+              rx={tubeR - 1.5}
+            />
+          </clipPath>
+
+          {/* Clip for bulb fill */}
+          <clipPath id={`${uid}-bulbClip`}>
+            <circle cx={tubeCx} cy={bulbCy} r={bulbR - 2} />
+          </clipPath>
+        </defs>
+
+        {/* === Tube === */}
+        {/* Outer tube (glass look) */}
         <rect
           x={tubeX}
           y={tubeTop}
           width={tubeW}
           height={tubeH}
           rx={tubeR}
-          fill="#f5f5f0"
-          stroke="#a3a397"
-          strokeWidth="1.5"
+          fill={`url(#${uid}-glass)`}
+          stroke="#b0b0a8"
+          strokeWidth="1.2"
         />
 
-        {/* Clip path */}
-        <defs>
-          <clipPath id={clipId}>
-            <rect
-              x={tubeX + 1}
-              y={tubeTop + 1}
-              width={tubeW - 2}
-              height={tubeH - 2}
-              rx={tubeR - 1}
-            />
-          </clipPath>
-        </defs>
-
-        {/* Fill */}
+        {/* Tube inner shadow (left edge) */}
         <rect
-          x={tubeX + 1}
+          x={tubeX + 2}
+          y={tubeTop + 2}
+          width={3}
+          height={tubeH - 4}
+          rx={1.5}
+          fill="rgba(0,0,0,0.04)"
+        />
+
+        {/* Fill liquid */}
+        <rect
+          x={tubeX + 1.5}
           y={tubeTop + tubeH - fillH}
-          width={tubeW - 2}
+          width={tubeW - 3}
           height={fillH}
-          fill={fillColor}
-          clipPath={`url(#${clipId})`}
+          fill={`url(#${uid}-fill)`}
+          clipPath={`url(#${uid}-tubeClip)`}
           className="transition-all duration-1000 ease-out"
         />
 
+        {/* Liquid highlight (glass reflection on fill) */}
+        {fillH > 10 && (
+          <rect
+            x={tubeX + tubeW - 8}
+            y={tubeTop + tubeH - fillH + 2}
+            width={3}
+            height={fillH - 4}
+            rx={1.5}
+            fill="rgba(255,255,255,0.3)"
+            clipPath={`url(#${uid}-tubeClip)`}
+            className="transition-all duration-1000 ease-out"
+          />
+        )}
+
+        {/* Tick marks */}
+        {ticks.map((t) => {
+          const y = tubeTop + tubeH - t * tubeH * goalPct;
+          return (
+            <g key={t}>
+              <line
+                x1={tubeX + tubeW + 2}
+                y1={y}
+                x2={tubeX + tubeW + 7}
+                y2={y}
+                stroke="#b0b0a8"
+                strokeWidth="1"
+              />
+              <text
+                x={tubeX + tubeW + 10}
+                y={y + 3}
+                fill="#b0b0a8"
+                fontSize="7"
+                fontFamily="system-ui"
+              >
+                {Math.round(t * goal)}
+              </text>
+            </g>
+          );
+        })}
+
         {/* Goal line */}
         <line
-          x1={tubeX - 5}
+          x1={tubeX - 4}
           y1={goalLineY}
-          x2={tubeX + tubeW + 5}
+          x2={tubeX + tubeW + 4}
           y2={goalLineY}
-          stroke="#a3a397"
+          stroke={fillColor}
           strokeWidth="1.5"
-          strokeDasharray="4 3"
+          strokeDasharray="3 2"
+          opacity="0.6"
         />
-        <text
-          x={tubeX + tubeW + 8}
-          y={goalLineY + 3.5}
-          fill="#a3a397"
-          fontSize="9"
-          fontWeight="bold"
-        >
-          {goal}
-        </text>
 
-        {/* Tube border overlay */}
+        {/* Tube glass highlight (reflection streak) */}
+        <rect
+          x={tubeX + 4}
+          y={tubeTop + 6}
+          width={2.5}
+          height={tubeH - 12}
+          rx={1.25}
+          fill="rgba(255,255,255,0.5)"
+        />
+
+        {/* === Neck === */}
+        <rect
+          x={tubeX + 4}
+          y={neckTop}
+          width={tubeW - 8}
+          height={neckH}
+          fill={count > 0 ? fillColor : "#e0e0da"}
+          className="transition-all duration-700"
+        />
+        {/* Neck glass overlay */}
+        <rect
+          x={tubeX + 4}
+          y={neckTop}
+          width={tubeW - 8}
+          height={neckH}
+          fill={`url(#${uid}-glass)`}
+          opacity="0.2"
+        />
+
+        {/* === Bulb === */}
+        {/* Outer ring */}
+        <circle
+          cx={tubeCx}
+          cy={bulbCy}
+          r={bulbR}
+          fill={`url(#${uid}-glass)`}
+          stroke="#b0b0a8"
+          strokeWidth="1.2"
+        />
+
+        {/* Filled bulb */}
+        <circle
+          cx={tubeCx}
+          cy={bulbCy}
+          r={bulbR - 2}
+          fill={count > 0 ? bulbColor : "#e0e0da"}
+          className="transition-all duration-700"
+        />
+
+        {/* Bulb highlight (shine) */}
+        <ellipse
+          cx={tubeCx - 6}
+          cy={bulbCy - 7}
+          rx={5}
+          ry={6}
+          fill="rgba(255,255,255,0.25)"
+        />
+        <circle
+          cx={tubeCx - 4}
+          cy={bulbCy - 9}
+          r={2.5}
+          fill="rgba(255,255,255,0.35)"
+        />
+
+        {/* Tube border overlay (crisp edge on top) */}
         <rect
           x={tubeX}
           y={tubeTop}
@@ -156,41 +294,8 @@ function SingleThermometer({
           height={tubeH}
           rx={tubeR}
           fill="none"
-          stroke="#a3a397"
-          strokeWidth="1.5"
-        />
-
-        {/* Connection to bulb */}
-        <rect
-          x={tubeX + 5}
-          y={tubeTop + tubeH - 2}
-          width={tubeW - 10}
-          height={24}
-          fill={count > 0 ? fillColor : "#e8e8e0"}
-          className="transition-all duration-700"
-        />
-
-        {/* Bulb */}
-        <circle
-          cx={bulbCx}
-          cy={bulbCy}
-          r={bulbR}
-          fill="#f5f5f0"
-          stroke="#a3a397"
-          strokeWidth="1.5"
-        />
-        <circle
-          cx={bulbCx}
-          cy={bulbCy}
-          r={bulbR - 2.5}
-          fill={count > 0 ? bulbColor : "#e8e8e0"}
-          className="transition-all duration-700"
-        />
-        <circle
-          cx={bulbCx - 6}
-          cy={bulbCy - 6}
-          r={4}
-          fill="rgba(255,255,255,0.3)"
+          stroke="#b0b0a8"
+          strokeWidth="1.2"
         />
       </svg>
     </div>
@@ -231,7 +336,7 @@ export function ThermometerPair({
 
   return (
     <div className="flex flex-col items-center gap-4">
-      {/* Headline — emphasis on 250 per side */}
+      {/* Headline */}
       <div className="text-center">
         <div className="font-serif text-charcoal/70 text-sm font-bold uppercase tracking-wider">
           250 on each side
@@ -244,17 +349,18 @@ export function ThermometerPair({
       </div>
 
       {/* Two thermometers side by side */}
-      <div className="flex gap-4 sm:gap-6">
+      <div className="flex gap-4 sm:gap-8">
         <SingleThermometer
           count={counts.this_side}
           goal={goal}
           label="This Side"
           icon="👤"
           fillColor="#1a6b38"
+          fillColorLight="#2d8a4e"
           bulbColor="#1a6b38"
           textColor="#1a4d2e"
           accentColor="#4da76b"
-          clipId="tubeClipThis"
+          uid="thermo-this"
           animated={animated}
         />
         <SingleThermometer
@@ -263,15 +369,16 @@ export function ThermometerPair({
           label="Other Side"
           icon="✨"
           fillColor="#d4a017"
+          fillColorLight="#e6b33e"
           bulbColor="#b8860b"
           textColor="#7a5213"
           accentColor="#e6b33e"
-          clipId="tubeClipOther"
+          uid="thermo-other"
           animated={animated}
         />
       </div>
 
-      {/* Combined total — secondary emphasis */}
+      {/* Combined total */}
       <div className="text-center text-charcoal/40 text-xs mt-1">
         {total} total acts of service across both sides
       </div>

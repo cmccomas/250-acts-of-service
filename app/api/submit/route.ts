@@ -20,10 +20,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Basic email validation
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+    // Basic contact info validation (email or phone)
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email!);
+    const isPhone = /[\d]{7,}/.test(body.email!.replace(/[\s\-().+]/g, ""));
+    if (!isEmail && !isPhone) {
       return NextResponse.json(
-        { error: "Please enter a valid email address." },
+        { error: "Please enter a valid email address or phone number." },
         { status: 400 }
       );
     }

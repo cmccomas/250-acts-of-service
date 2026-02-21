@@ -155,18 +155,18 @@ export function SubmissionForm() {
           />
         </div>
 
-        {/* Email */}
+        {/* Email or Phone */}
         <div>
           <label className="block text-sm font-semibold text-charcoal/80 mb-1.5">
-            Email Address
+            Email or Phone Number
           </label>
           <input
-            type="email"
+            type="text"
             value={form.email}
             onChange={(e) => update("email", e.target.value)}
             required
             className="w-full border border-charcoal/15 rounded px-4 py-2.5 text-charcoal placeholder:text-charcoal/30 focus:outline-none focus:ring-2 focus:ring-forest-400 focus:border-transparent transition-shadow"
-            placeholder="you@example.com"
+            placeholder="you@example.com or (509) 555-1234"
           />
         </div>
 

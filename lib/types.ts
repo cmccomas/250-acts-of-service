@@ -3,6 +3,7 @@ export interface Act {
   side_of_veil: "this" | "other";
   act_description: string;
   ward_name: string;
+  isExample?: boolean;
 }
 
 export interface WardStat {

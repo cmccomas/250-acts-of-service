@@ -41,6 +41,9 @@ export function ActCard({ act }: ActCardProps) {
       <p className="text-charcoal/80 text-sm leading-relaxed">
         {act.act_description}
       </p>
+      {act.isExample && (
+        <p className="text-charcoal/30 text-[10px] mt-3 italic">Example idea</p>
+      )}
     </div>
   );
 }

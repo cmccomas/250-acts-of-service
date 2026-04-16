@@ -46,3 +46,5 @@ setup.ps1
 setup_output.txt
 check.bat
 node_version.txt
+
+.vercel

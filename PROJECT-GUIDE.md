@@ -184,6 +184,43 @@ Open a terminal in the project folder and start a new Claude Code session. Every
 
 ---
 
+## Forking This for Another Stake
+
+Want to run this same app for your stake? Here's how:
+
+### Step 1: Get the Code
+Fork or clone the repo: `https://github.com/cmccomas/250-acts-of-service`
+
+### Step 2: Install Claude Code
+If you don't already have it, install Claude Code. Open the project folder in your terminal and run `claude`. It will read the `CLAUDE.md` file and immediately understand the project.
+
+### Step 3: Tell Claude What to Customize
+Just say something like: *"Help me set this up for the [Your Stake Name] Stake. Our wards are [list them]."*
+
+Claude will walk you through updating:
+- **Ward names** — `components/SubmissionForm.tsx`, the `WARD_OPTIONS` array
+- **Goal number** — `app/page.tsx` (`goal={250}` prop) and `components/Thermometer.tsx` (label text)
+- **Stake name** — `app/page.tsx` (header + footer) and `app/layout.tsx` (page title/description)
+- **Example acts** — `lib/db.ts`, the `EXAMPLE_ACTS` array (shown when database is empty)
+- **Colors** (optional) — `tailwind.config.ts` if you want a different color scheme
+
+### Step 4: Set Up Your Own Infrastructure
+1. **Database:** Create a free account at [turso.tech](https://turso.tech) (sign in with GitHub). Create a new database — the table creates itself automatically.
+2. **Hosting:** Create a free account at [vercel.com](https://vercel.com). Import the project.
+3. **Environment variables:** Set these four in both your local `.env.local` file and in Vercel's dashboard:
+   - `TURSO_DB_URL` — your Turso database URL
+   - `TURSO_DB_TOKEN` — your Turso auth token
+   - `ADMIN_PASSWORD` — whatever you want the admin login password to be
+   - `SESSION_SECRET` — any random string (used for cookie encryption)
+4. **Deploy:** Run `npx vercel --prod`
+
+### Step 5: You're Live
+- Your app is at whatever URL Vercel gives you
+- Admin panel is at `/admin`
+- Share the link with your stake and start collecting acts of service!
+
+---
+
 ## Git Info
 
 - **Branch:** main

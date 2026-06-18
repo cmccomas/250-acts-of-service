@@ -4,8 +4,8 @@ import { createClient } from "@supabase/supabase-js";
 // Admin-only API route for the Upriver Fire Relief signups.
 //
 // Security model:
-//   - The caller must supply the shared admin password.
-//   - We compare it to ADMIN_PASSWORD server-side. No match => 401, no data.
+//   - The caller must supply the relief admin password.
+//   - We compare it to EMERGENCY_ADMIN_PASSWORD server-side. No match => 401.
 //   - On a match we query with the SUPABASE_SERVICE_ROLE_KEY, which bypasses
 //     Row Level Security. That key lives ONLY here on the server and is never
 //     sent to the browser.
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const expected = process.env.ADMIN_PASSWORD;
+  const expected = process.env.EMERGENCY_ADMIN_PASSWORD;
   if (!expected || password !== expected) {
     return NextResponse.json({ error: "Incorrect password" }, { status: 401 });
   }

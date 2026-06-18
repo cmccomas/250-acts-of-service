@@ -68,16 +68,15 @@ In the Vercel dashboard, open the `250-acts-of-service` project >
 | `NEXT_PUBLIC_SUPABASE_URL` | your Project URL | public, read by the form in the browser |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | your anon public key | public, read by the form in the browser |
 | `SUPABASE_SERVICE_ROLE_KEY` | your service_role key | secret, server only |
-| `ADMIN_PASSWORD` | a strong shared password for leaders | already used by the existing admin panel; the relief admin shares it |
+| `EMERGENCY_ADMIN_PASSWORD` | a strong password for leaders | gates the relief admin page; separate from the existing `ADMIN_PASSWORD` |
 
 Notes:
 
 - `NEXT_PUBLIC_*` values are baked into the site at build time, so the project
   must be redeployed after you set or change them (step 6 does this).
-- `ADMIN_PASSWORD` likely already exists in this project (the existing admin
-  uses it). The relief admin page reuses the same variable, so the same
-  password works for both. If you want a different password just for relief,
-  tell me and I will switch the route to its own variable.
+- `EMERGENCY_ADMIN_PASSWORD` is dedicated to the relief admin page. It is
+  independent of the existing `ADMIN_PASSWORD` (which still gates the
+  acts-of-service admin), so the two admin areas have separate passwords.
 - You do not need a separate `SUPABASE_URL`; the admin route falls back to
   `NEXT_PUBLIC_SUPABASE_URL`.
 

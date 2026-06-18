@@ -12,17 +12,9 @@ export const RESOURCE_OPTIONS = [
   "Cots",
   "Bedding",
   "Outdoor cooking (flat top, grill)",
-  "Generator",
-  "Hand tools",
-  "Water / hoses",
 ] as const;
 
-export const AVAILABILITY_OPTIONS = [
-  "Right now / today",
-  "Within a few days",
-  "Weekends only",
-  "Flexible, contact me to coordinate",
-] as const;
+export const AVAILABILITY_OPTIONS = ["Weekends", "Weekdays", "Evenings"] as const;
 
 // Shape of a row in the resource_offers table.
 export interface ResourceOffer {

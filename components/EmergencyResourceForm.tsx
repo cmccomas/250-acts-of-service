@@ -18,7 +18,7 @@ export function EmergencyResourceForm() {
     name: "",
     email: "",
     phone: "",
-    availability: "",
+    availability: [] as string[],
     resources: [] as string[],
     other_resources: "",
     notes: "",
@@ -26,6 +26,15 @@ export function EmergencyResourceForm() {
 
   function update(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
+  }
+
+  function toggleAvailability(option: string) {
+    setForm((prev) => ({
+      ...prev,
+      availability: prev.availability.includes(option)
+        ? prev.availability.filter((a) => a !== option)
+        : [...prev.availability, option],
+    }));
   }
 
   function toggleResource(resource: string) {
@@ -63,7 +72,9 @@ export function EmergencyResourceForm() {
       name: form.name.trim(),
       email: form.email.trim(),
       phone: form.phone.trim(),
-      availability: form.availability || null,
+      availability: form.availability.length
+        ? form.availability.join(", ")
+        : null,
       resources: form.resources,
       other_resources: form.other_resources.trim() || null,
       notes: form.notes.trim() || null,
@@ -99,7 +110,7 @@ export function EmergencyResourceForm() {
               name: "",
               email: "",
               phone: "",
-              availability: "",
+              availability: [],
               resources: [],
               other_resources: "",
               notes: "",
@@ -192,37 +203,35 @@ export function EmergencyResourceForm() {
             When are you available?
           </legend>
           <div className="space-y-2.5 mt-3">
-            {AVAILABILITY_OPTIONS.map((option) => (
-              <label
-                key={option}
-                className={`flex items-center gap-3 p-4 rounded border-2 cursor-pointer transition-all ${
-                  form.availability === option
-                    ? "border-forest-400 bg-forest-50 shadow-sm"
-                    : "border-charcoal/10 hover:border-charcoal/20 bg-white"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="availability"
-                  value={option}
-                  checked={form.availability === option}
-                  onChange={() => update("availability", option)}
-                  className="h-5 w-5 accent-forest-600 flex-shrink-0"
-                />
-                <span className="text-charcoal font-medium">{option}</span>
-              </label>
-            ))}
+            {AVAILABILITY_OPTIONS.map((option) => {
+              const checked = form.availability.includes(option);
+              return (
+                <label
+                  key={option}
+                  className={`flex items-center gap-3 p-4 rounded border-2 cursor-pointer transition-all ${
+                    checked
+                      ? "border-forest-400 bg-forest-50 shadow-sm"
+                      : "border-charcoal/10 hover:border-charcoal/20 bg-white"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => toggleAvailability(option)}
+                    className="h-5 w-5 accent-forest-600 flex-shrink-0"
+                  />
+                  <span className="text-charcoal font-medium">{option}</span>
+                </label>
+              );
+            })}
           </div>
         </fieldset>
 
         {/* Resources */}
         <fieldset>
-          <legend className="font-serif text-lg font-bold text-charcoal mb-1">
+          <legend className="font-serif text-lg font-bold text-charcoal mb-3">
             Resources I can offer
           </legend>
-          <p className="text-sm text-charcoal/50 mb-3">
-            Check anything you can lend or donate.
-          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {RESOURCE_OPTIONS.map((resource) => {
               const checked = form.resources.includes(resource);
@@ -265,7 +274,6 @@ export function EmergencyResourceForm() {
             onChange={(e) => update("other_resources", e.target.value)}
             rows={3}
             className={`${inputClass} resize-none`}
-            placeholder="For example: extra tarps, a wheelbarrow, willing to provide meals."
           />
         </div>
 
@@ -286,7 +294,6 @@ export function EmergencyResourceForm() {
             onChange={(e) => update("notes", e.target.value)}
             rows={3}
             className={`${inputClass} resize-none`}
-            placeholder="For example: I have 2 generators, can deliver within 10 miles."
           />
         </div>
 

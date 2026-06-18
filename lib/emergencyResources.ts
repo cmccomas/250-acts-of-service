@@ -10,7 +10,7 @@ export const RESOURCE_OPTIONS = [
   "Truck",
   "Tractor",
   "Cots",
-  "Bedding",
+  "Clean bedding",
   "Outdoor cooking (flat top, grill)",
 ] as const;
 

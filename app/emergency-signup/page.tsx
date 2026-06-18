@@ -18,9 +18,8 @@ export default function EmergencySignupPage() {
           Upriver Fire Relief
         </h1>
         <p className="text-charcoal/70 leading-relaxed">
-          The Upriver Fire has destroyed homes near Spokane. Share the equipment
-          and supplies you have available to lend or donate, and we will
-          coordinate getting them to neighbors who need help.
+          Share the equipment and supplies you have available, and we will
+          coordinate with you.
         </p>
       </header>
 

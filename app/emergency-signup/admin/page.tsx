@@ -86,6 +86,14 @@ export default function EmergencyAdminPage() {
     return haystack.includes(filter.trim().toLowerCase());
   });
 
+  // Running tally: how many offers include each resource, most common first.
+  const resourceTally = Object.entries(
+    rows.reduce<Record<string, number>>((acc, r) => {
+      for (const res of r.resources ?? []) acc[res] = (acc[res] ?? 0) + 1;
+      return acc;
+    }, {})
+  ).sort((a, b) => b[1] - a[1]);
+
   function exportCsv() {
     const headers = [
       "Submitted",
@@ -203,6 +211,27 @@ export default function EmergencyAdminPage() {
           </button>
         </div>
       </div>
+
+      {resourceTally.length > 0 && (
+        <div className="bg-white rounded border border-charcoal/10 shadow-sm p-4 mb-6">
+          <h2 className="font-serif text-lg font-bold text-charcoal mb-3">
+            Resource tally
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {resourceTally.map(([res, count]) => (
+              <span
+                key={res}
+                className="inline-flex items-center gap-2 bg-forest-50 border border-forest-200 text-forest-800 text-sm px-3 py-1.5 rounded"
+              >
+                {res}
+                <span className="inline-flex items-center justify-center bg-forest-700 text-white text-xs font-bold rounded-full min-w-[1.25rem] h-5 px-1">
+                  {count}
+                </span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       <input
         type="text"
